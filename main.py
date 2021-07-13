@@ -53,10 +53,10 @@ def main():
     iter_2 = 5
 
 
-    time_prediction = time_pred(threads_num, iter_1, iter_2)
+    time_prediction, time_prediction_clear = time_pred(threads_num, iter_1, iter_2)
     print("Your variables: threads:", threads_num, ", iter_1:", iter_1, ", iter_2:", iter_2)
     print("Time predicted:", time_prediction)
-
+    print("Time predicted on clear dadaset:", time_prediction_clear)
 
     start = timeit.default_timer()
 
@@ -76,6 +76,7 @@ def main():
 
     print('Time of:', threads_num * iter_1 * iter_2, 'requests:', stop - start)
     print("Time prediction error:", abs((stop - start) - time_prediction))
+    print("Time prediction error wth clear dataset:", abs((stop - start) - time_prediction_clear))
 
 
 
