@@ -8,10 +8,11 @@ import threading
 import logging
 import timeit
 
+from time_prediction import time_pred
 
 def get_tor_session():
     session = requests.session()
-    session.proxies = {'http':  'socks5://127.0.0.1:9050',
+    session.proxies = {'http': 'socks5://127.0.0.1:9050',
                        'https': 'socks5://127.0.0.1:9050'}
     return session
 
@@ -24,7 +25,6 @@ def renew_connection():
 
 
 def thread_function(name, url, iter_1, iter_2):
-
     for i in range(iter_1):
         session = get_tor_session()
 
@@ -48,9 +48,14 @@ def main():
     # HE HE HE HE :D
     url = 'https://camo.githubusercontent.com/f23e18ddb522dd44bfff1cee6226b6e381a23ce3f129b5b7e8877d3cd6ccdd2b/68747470733a2f2f76697369746f722d62616467652e6c616f62692e6963752f62616467653f706167655f69643d4a616b75622d4269656c6177736b69'
 
-    threads_num = 10
-    iter_1 = 50
+    threads_num = 4
+    iter_1 = 2
     iter_2 = 5
+
+
+    time_prediction = time_pred(threads_num, iter_1, iter_2)
+    print("Your variables: threads:", threads_num, ", iter_1:", iter_1, ", iter_2:", iter_2)
+    print("Time predicted:", time_prediction)
 
 
     start = timeit.default_timer()
@@ -58,23 +63,21 @@ def main():
     threads = list()
     for index in range(threads_num):
         # logging.info("Main    : create and start thread %d.", index)
-        print('start', index)
+        # print('start', index)
         x = threading.Thread(target=thread_function, args=(index, url, iter_1, iter_2))
         threads.append(x)
         x.start()
 
     for index, thread in enumerate(threads):
         thread.join()
-        print('finish', index)
+        # print('finish', index)
 
     stop = timeit.default_timer()
 
     print('Time of:', threads_num * iter_1 * iter_2, 'requests:', stop - start)
+    print("Time prediction error:", abs((stop - start) - time_prediction))
 
 
-    # 3831
-    # Time of: 2500 requests: 1252.0522855430027
-    
 
 if __name__ == '__main__':
     main()
