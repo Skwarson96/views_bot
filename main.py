@@ -7,6 +7,8 @@ import json
 import threading
 import logging
 import timeit
+import argparse
+from pathlib import Path
 
 from time_prediction import time_pred
 
@@ -45,18 +47,26 @@ def thread_function(name, url, iter_1, iter_2):
 def main():
     print("test main")
 
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('threads_num', type=int)
+    parser.add_argument('iter_1', type=int)
+    parser.add_argument('iter_2', type=int)
+    args = parser.parse_args()
+
     # HE HE HE HE :D
+
     url = 'https://camo.githubusercontent.com/f23e18ddb522dd44bfff1cee6226b6e381a23ce3f129b5b7e8877d3cd6ccdd2b/68747470733a2f2f76697369746f722d62616467652e6c616f62692e6963752f62616467653f706167655f69643d4a616b75622d4269656c6177736b69'
 
-    threads_num = 4
-    iter_1 = 2
-    iter_2 = 5
+    threads_num = args.threads_num
+    iter_1 = args.iter_1
+    iter_2 = args.iter_2
 
 
     time_prediction, time_prediction_clear = time_pred(threads_num, iter_1, iter_2)
     print("Your variables: threads:", threads_num, ", iter_1:", iter_1, ", iter_2:", iter_2)
     print("Time predicted:", time_prediction)
-    print("Time predicted on clear dadaset:", time_prediction_clear)
+    print("Time predicted on clear dataset:", time_prediction_clear)
 
     start = timeit.default_timer()
 
