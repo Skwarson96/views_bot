@@ -97,14 +97,23 @@ def main():
     with Path('regressors/reg_SVR.p').open('rb') as classifier_file:
         reg_SVR = pickle.load(classifier_file)
 
+    with Path('regressors/reg_DTR.p').open('rb') as classifier_file:
+        reg_DTR = pickle.load(classifier_file)
+
+    with Path('regressors/reg_LR.p').open('rb') as classifier_file:
+        reg_LR = pickle.load(classifier_file)
+
     time_prediction_rf = reg_RF.predict([[threads_num, iter_1, iter_2]])
     time_prediction_svr = reg_SVR.predict([[threads_num, iter_1, iter_2]])
-    # time_prediction_clear = reg_RF.predict([[threads_num, iter_1, iter_2]])
+    time_prediction_dtr = reg_DTR.predict([[threads_num, iter_1, iter_2]])
+    time_prediction_lr = reg_LR.predict([[threads_num, iter_1, iter_2]])
 
 
     print("Your variables: threads:", threads_num, ", iter_1:", iter_1, ", iter_2:", iter_2)
     print("Time predicted Random Forest:", time_prediction_rf)
     print("Time predicted SVR:", time_prediction_svr)
+    print("Time predicted DTR:", time_prediction_dtr)
+    print("Time predicted LR:", time_prediction_lr)
     # print("Time predicted on clear dataset:", time_prediction_clear)
 
     start_val = check_val(url)
@@ -125,13 +134,16 @@ def main():
 
     stop = timeit.default_timer()
 
-    finish_vel = check_val(url)
+    finish_val = check_val(url)
 
     print('Time of:', threads_num * iter_1 * iter_2, 'requests:', stop - start)
     print("Time prediction error Random Forest:", abs((stop - start) - time_prediction_rf))
     print("Time prediction error SVR:", abs((stop - start) - time_prediction_svr))
-    print("Real number of requests:", finish_vel-start_val-1)
-    
+    print("Time prediction error DTR:", abs((stop - start) - time_prediction_dtr))
+    print("Time prediction error LR:", abs((stop - start) - time_prediction_lr))
+
+    print("Real number of requests:", finish_val-start_val-1)
+
     # print("Time prediction error wth clear dataset:", abs((stop - start) - time_prediction_clear))
 
 

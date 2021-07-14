@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 import pickle
 
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error
-
 from sklearn import svm
 from sklearn import tree
+from sklearn.linear_model import LinearRegression
+
+from sklearn.metrics import mean_absolute_error
 
 def show_plots(df, max_val):
 
@@ -75,13 +76,20 @@ def train_regressors(thred_num, iter_1_num, iter_2_num):
 
     regr_rf = RandomForestRegressor(random_state=0)
     regr_rf.fit(X, y)
-
     pickle.dump(regr_rf, open('./regressors/reg_RF.p', 'wb'))
 
 
     regr_svr = svm.SVR()
     regr_svr.fit(X, y)
     pickle.dump(regr_svr, open('./regressors/reg_SVR.p', 'wb'))
+
+    regr_dtr = tree.DecisionTreeRegressor()
+    regr_dtr.fit(X, y)
+    pickle.dump(regr_dtr, open('./regressors/reg_DTR.p', 'wb'))
+
+    regr_lr = LinearRegression()
+    regr_lr.fit(X, y)
+    pickle.dump(regr_lr, open('./regressors/reg_LR.p', 'wb'))
 
 
 
