@@ -2,10 +2,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+import pickle
+
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 
-
+from sklearn import svm
+from sklearn import tree
 
 def show_plots(df, max_val):
 
@@ -58,18 +61,43 @@ def clear_dataset(df):
 
     return df_copy
 
+# def save_regressors():
+#     pass
+
+def train_regressors(thred_num, iter_1_num, iter_2_num):
 
 
-def time_pred(thred_num, iter_1_num, iter_2_num):
-    # print('test time pred')
-
+    # raw dataset
     data_df = pd.read_csv('dataset.csv')
-
-    # print(data_df)
 
     y = data_df.loc[:, 'time'].values
     X = data_df.loc[:, ['threads', 'iter_1', 'iter_2']].values
-    # print(X)
+
+    regr_rf = RandomForestRegressor(random_state=0)
+    regr_rf.fit(X, y)
+
+    pickle.dump(regr_rf, open('./regressors/reg_RF.p', 'wb'))
+
+
+    regr_svr = svm.SVR()
+    regr_svr.fit(X, y)
+    pickle.dump(regr_svr, open('./regressors/reg_SVR.p', 'wb'))
+
+
+
+def load_model():
+    pass
+
+
+
+
+def time_pred(thred_num, iter_1_num, iter_2_num):
+
+    # raw dataset
+    data_df = pd.read_csv('dataset.csv')
+
+    y = data_df.loc[:, 'time'].values
+    X = data_df.loc[:, ['threads', 'iter_1', 'iter_2']].values
 
     regr = RandomForestRegressor(random_state=0)
     regr.fit(X, y)
@@ -81,7 +109,6 @@ def time_pred(thred_num, iter_1_num, iter_2_num):
 
     y = clear_df.loc[:, 'time'].values
     X = clear_df.loc[:, ['threads', 'iter_1', 'iter_2']].values
-    # print(X)
 
     regr_2 = RandomForestRegressor(random_state=0)
     regr_2.fit(X, y)

@@ -9,8 +9,11 @@ import logging
 import timeit
 import argparse
 from pathlib import Path
+import pickle
 
 from time_prediction import time_pred
+from time_prediction import train_regressors
+
 
 def get_tor_session():
     session = requests.session()
@@ -63,10 +66,27 @@ def main():
     iter_2 = args.iter_2
 
 
-    time_prediction, time_prediction_clear = time_pred(threads_num, iter_1, iter_2)
+    # time_prediction, time_prediction_clear = time_pred(threads_num, iter_1, iter_2)
+
+
+
+    train_regressors(threads_num, iter_1, iter_2)
+
+    with Path('regressors/reg_RF.p').open('rb') as classifier_file:
+        reg_RF = pickle.load(classifier_file)
+
+    with Path('regressors/reg_SVR.p').open('rb') as classifier_file:
+        reg_SVR = pickle.load(classifier_file)
+
+    time_prediction_rf = reg_RF.predict([[threads_num, iter_1, iter_2]])
+    time_prediction_svr = reg_SVR.predict([[threads_num, iter_1, iter_2]])
+    # time_prediction_clear = reg_RF.predict([[threads_num, iter_1, iter_2]])
+
+
     print("Your variables: threads:", threads_num, ", iter_1:", iter_1, ", iter_2:", iter_2)
-    print("Time predicted:", time_prediction)
-    print("Time predicted on clear dataset:", time_prediction_clear)
+    print("Time predicted Random Forest:", time_prediction_rf)
+    print("Time predicted SVR:", time_prediction_svr)
+    # print("Time predicted on clear dataset:", time_prediction_clear)
 
     start = timeit.default_timer()
 
@@ -85,8 +105,10 @@ def main():
     stop = timeit.default_timer()
 
     print('Time of:', threads_num * iter_1 * iter_2, 'requests:', stop - start)
-    print("Time prediction error:", abs((stop - start) - time_prediction))
-    print("Time prediction error wth clear dataset:", abs((stop - start) - time_prediction_clear))
+    print("Time prediction error Random Forest:", abs((stop - start) - time_prediction_rf))
+    print("Time prediction error SVR:", abs((stop - start) - time_prediction_svr))
+
+    # print("Time prediction error wth clear dataset:", abs((stop - start) - time_prediction_clear))
 
 
 
