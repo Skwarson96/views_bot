@@ -10,6 +10,7 @@ import timeit
 import argparse
 from pathlib import Path
 import pickle
+import re
 
 from time_prediction import time_pred
 from time_prediction import train_regressors
@@ -40,11 +41,29 @@ def thread_function(name, url, iter_1, iter_2):
 
         for i2 in range(iter_2):
             req_ = session.get(url).text
+            # req_dict = json.loads(req_)
+            # print('req', req_)
+            # print(type(req_dict))
             print('thread nr:', name, 'iter:', i, '.', i2, new_ip)
 
         renew_connection()
 
         time.sleep(1)
+
+def check_val(url):
+    session = get_tor_session()
+
+    req_ = session.get(url).text
+    # req_dict = json.loads(req_)
+    # print('req', req_)
+    # print('req', type(req_))
+    number_ = re.search(">\d+<", req_).group(0)
+    print(str(number_))
+    number_ = number_[1:-1]
+
+    return int(number_)
+
+
 
 
 def main():
@@ -88,6 +107,8 @@ def main():
     print("Time predicted SVR:", time_prediction_svr)
     # print("Time predicted on clear dataset:", time_prediction_clear)
 
+    start_val = check_val(url)
+
     start = timeit.default_timer()
 
     threads = list()
@@ -104,10 +125,13 @@ def main():
 
     stop = timeit.default_timer()
 
+    finish_vel = check_val(url)
+
     print('Time of:', threads_num * iter_1 * iter_2, 'requests:', stop - start)
     print("Time prediction error Random Forest:", abs((stop - start) - time_prediction_rf))
     print("Time prediction error SVR:", abs((stop - start) - time_prediction_svr))
-
+    print("Real number of requests:", finish_vel-start_val-1)
+    
     # print("Time prediction error wth clear dataset:", abs((stop - start) - time_prediction_clear))
 
 
