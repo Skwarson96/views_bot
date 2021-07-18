@@ -20,21 +20,47 @@ def show_plot(index, real_vals, rf_vals, svr_vals, dtr_vals, lr_vals):
 def req_num_check(dataframe, index, real_num, exp_num, threads_num):
 
     threads = threads_num.unique()
-    print(threads)
-    th_1 = dataframe.loc[dataframe['threads'] == threads[1]]
+    # print(threads)
+    # th_1 = dataframe.loc[dataframe['threads'] == threads[1]]
 
-    forecast_error = th_1['real_req_num'].sum() - th_1['exp_req_num'].sum()
-    mean_forecast_error = np.mean(th_1['real_req_num'] - th_1['exp_req_num'])
-    mae = mean_absolute_error(th_1['real_req_num'] , th_1['exp_req_num'])
-    mse = mean_squared_error(th_1['real_req_num'] , th_1['exp_req_num'])
-    rmse = np.sqrt(mse)
 
-    print('forecast_error: {}'.format(forecast_error))
-    print('mean_forecast_error: {}'.format(mean_forecast_error))
-    print('mae: {}'.format(mae))
-    print('mse: {}'.format(mse))
-    print('rmse: {}'.format(rmse))
+    error_dict = {}
+    error_dict['forecast_error'] = []
+    error_dict['mean_forecast_error'] = []
+    error_dict['mae'] = []
+    error_dict['mse'] = []
+    error_dict['rmse'] = []
 
+    for thread_ in threads:
+        # skip 0
+        if thread_ == 0:
+            continue
+        # print(thread_)
+
+        thread_data = dataframe.loc[dataframe['threads'] == thread_]
+        forecast_error = thread_data['real_req_num'].sum() - thread_data['exp_req_num'].sum()
+        mean_forecast_error = np.mean(thread_data['real_req_num'] - thread_data['exp_req_num'])
+        mae = mean_absolute_error(thread_data['real_req_num'], thread_data['exp_req_num'])
+        mse = mean_squared_error(thread_data['real_req_num'], thread_data['exp_req_num'])
+        rmse = np.sqrt(mse)
+
+        error_dict['forecast_error'].append(forecast_error)
+        error_dict['mean_forecast_error'].append(mean_forecast_error)
+        error_dict['mae'].append(mae)
+        error_dict['mse'].append(mse)
+        error_dict['rmse'].append(rmse)
+
+        # print('forecast_error: {}'.format(forecast_error))
+        # print('mean_forecast_error: {}'.format(mean_forecast_error))
+        # print('mae: {}'.format(mae))
+        # print('mse: {}'.format(mse))
+        # print('rmse: {}'.format(rmse))
+
+    print(error_dict)
+    plt.plot(threads[1:], error_dict['mae'])
+    # plt.plot(index, exp_num)
+    # plt.legend(['Real num', 'Exp num'])
+    plt.show()
 
     # plt.plot(index, real_num)
     # plt.plot(index, exp_num)
