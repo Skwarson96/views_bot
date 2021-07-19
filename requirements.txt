@@ -1,0 +1,7 @@
+matplotlib==3.4.2
+numpy==1.20.3
+pandas==1.2.4
+Pillow==8.3.1
+requests==2.25.1
+scikit-learn==0.24.2
+stem==1.8.0
