@@ -69,7 +69,7 @@ def train_regressors(thred_num, iter_1_num, iter_2_num):
 
 
     # raw dataset
-    data_df = pd.read_csv('dataset.csv')
+    data_df = pd.read_csv('datasets/dataset.csv')
 
     y = data_df.loc[:, 'time'].values
     X = data_df.loc[:, ['threads', 'iter_1', 'iter_2']].values
@@ -102,7 +102,7 @@ def load_model():
 def time_pred(thred_num, iter_1_num, iter_2_num):
 
     # raw dataset
-    data_df = pd.read_csv('dataset.csv')
+    data_df = pd.read_csv('datasets/dataset.csv')
 
     y = data_df.loc[:, 'time'].values
     X = data_df.loc[:, ['threads', 'iter_1', 'iter_2']].values

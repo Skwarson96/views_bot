@@ -113,8 +113,8 @@ def time_to_req_num(dataframe):
 
     # plt.plot(dataframe.index, ratio)
     plt.scatter(dataframe['threads'], ratio)
-    plt.title("Ratio of the number of requests to time ")
-    plt.xlabel('Index')
+    plt.title("Ratio of the number of requests to time by threads ")
+    plt.xlabel('Thread')
     plt.ylabel('real_num_of_req/real_time')
     plt.show()
 
@@ -122,7 +122,7 @@ def time_to_req_num(dataframe):
 def main():
 
     # open test dataset
-    df = pd.read_csv('test_dataset.csv')
+    df = pd.read_csv('datasets/test_dataset.csv')
 
     df['exp_req_num'] = df['threads'] * df['iter_1'] * df['iter_2']
 

@@ -63,7 +63,7 @@ def check_val(url):
 
 def load_dataframe():
 
-    data_df = pd.read_csv('test_dataset.csv')
+    data_df = pd.read_csv('datasets/test_dataset.csv')
     return data_df
 
 
@@ -75,10 +75,10 @@ def main():
     # HE HE HE HE :D
     url = 'https://camo.githubusercontent.com/f23e18ddb522dd44bfff1cee6226b6e381a23ce3f129b5b7e8877d3cd6ccdd2b/68747470733a2f2f76697369746f722d62616467652e6c616f62692e6963752f62616467653f706167655f69643d4a616b75622d4269656c6177736b69'
 
-
     threads_num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     iter_1_list = [1, 2, 5, 10, 15, 20, 25, 40, 50]
     iter_2_list = [1, 2, 3, 4, 5]
+
     collect_data_iterations = 2
     counter = 1
 
@@ -159,7 +159,7 @@ def main():
                     test_dataset.loc[len(test_dataset.index)] = [threads_num, iter_1, iter_2, time_score, rf_time, svr_time, dtr_time, lr_time, real_req_num]
 
                     counter = counter + 1
-                    test_dataset.to_csv('test_dataset.csv', index=False)
+                    test_dataset.to_csv('datasets/test_dataset.csv', index=False)
 
 
     # print("Time prediction error wth clear dataset:", abs((stop - start) - time_prediction_clear))

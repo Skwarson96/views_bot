@@ -136,7 +136,7 @@ def main():
 
     finish_val = check_val(url)
 
-    print('Time of:', threads_num * iter_1 * iter_2, 'requests:', stop - start)
+    print('Real time:', stop - start)
     print("Time prediction error Random Forest:", abs((stop - start) - time_prediction_rf))
     print("Time prediction error SVR:", abs((stop - start) - time_prediction_svr))
     print("Time prediction error DTR:", abs((stop - start) - time_prediction_dtr))

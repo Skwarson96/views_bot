@@ -44,7 +44,7 @@ def thread_function(name, url, iter_1, iter_2):
 
 def load_dataframe():
 
-    data_df = pd.read_csv('dataset.csv')
+    data_df = pd.read_csv('datasets/dataset.csv')
     return data_df
 
 def main():
@@ -90,7 +90,7 @@ def main():
                     dataset.loc[len(dataset.index)] = [threads_num, iter_1, iter_2, time_score]
 
                     counter = counter + 1
-                    dataset.to_csv('dataset.csv', index=False)
+                    dataset.to_csv('datasets/dataset.csv', index=False)
                     # Stats: all_iter 4 threads_num 10 iter_1 50 iter_2 5 time: 0
 
 
