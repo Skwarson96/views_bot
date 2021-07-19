@@ -11,10 +11,10 @@ def create_train_dataframe():
     return data_df
 
 def save_train_dataframe(data_df):
-    data_df.to_csv('dataset.csv', index=False)
+    data_df.to_csv('datasets/dataset.csv', index=False)
 
 def read_train_dataset():
-    data_df = pd.read_csv('dataset.csv')
+    data_df = pd.read_csv('datasets/dataset.csv')
     print(data_df)
     # return data_df
 
@@ -26,10 +26,10 @@ def create_test_dataframe():
     return data_df
 
 def save_test_dataframe(data_df):
-    data_df.to_csv('test_dataset.csv', index=False)
+    data_df.to_csv('datasets/test_dataset.csv', index=False)
 
 def read_test_dataset():
-    data_df = pd.read_csv('test_dataset.csv')
+    data_df = pd.read_csv('datasets/test_dataset.csv')
     print(data_df)
     # return data_df
 
