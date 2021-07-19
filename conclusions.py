@@ -8,21 +8,34 @@ from sklearn.metrics import mean_absolute_error
 
 def show_plot(index, real_vals, rf_vals, svr_vals, dtr_vals, lr_vals):
 
+    # plt.figure()
+    # plt.plot(index, real_vals)
+    # plt.plot(index, rf_vals)
+    # plt.plot(index, svr_vals)
+    # plt.plot(index, dtr_vals)
+    # plt.plot(index, lr_vals)
+    # plt.legend(['Real vals', 'RF vals', 'SVR vals', 'DTR vals', 'LR vals'])
+
+    plt.figure()
     plt.plot(index, real_vals)
-    plt.plot(index, rf_vals)
-    plt.plot(index, svr_vals)
     plt.plot(index, dtr_vals)
-    plt.plot(index, lr_vals)
-    plt.legend(['Real vals', 'RF vals', 'SVR vals', 'DTR vals', 'LR vals'])
+    plt.legend(['Real vals', 'DTR vals'])
+    plt.xlabel('Index')
+    plt.ylabel('Time')
     plt.show()
 
+    # plt.figure()
+    # plt.plot(index, real_vals)
+    # plt.plot(index, rf_vals)
+    # plt.legend(['Real vals', 'RF vals'])
+    # plt.xlabel('Index')
+    # plt.ylabel('Time [s]')
+    # plt.show()
 
-def req_num_check(dataframe, index, real_num, exp_num, threads_num):
 
-    threads = threads_num.unique()
-    # print(threads)
-    # th_1 = dataframe.loc[dataframe['threads'] == threads[1]]
+def req_num_check(dataframe):
 
+    threads = dataframe['threads'].unique()
 
     error_dict = {}
     error_dict['forecast_error'] = []
@@ -35,7 +48,6 @@ def req_num_check(dataframe, index, real_num, exp_num, threads_num):
         # skip 0
         if thread_ == 0:
             continue
-        # print(thread_)
 
         thread_data = dataframe.loc[dataframe['threads'] == thread_]
         forecast_error = thread_data['real_req_num'].sum() - thread_data['exp_req_num'].sum()
@@ -50,37 +62,70 @@ def req_num_check(dataframe, index, real_num, exp_num, threads_num):
         error_dict['mse'].append(mse)
         error_dict['rmse'].append(rmse)
 
-        # print('forecast_error: {}'.format(forecast_error))
-        # print('mean_forecast_error: {}'.format(mean_forecast_error))
-        # print('mae: {}'.format(mae))
-        # print('mse: {}'.format(mse))
-        # print('rmse: {}'.format(rmse))
 
     print(error_dict)
-    plt.plot(threads[1:], error_dict['mae'])
-    # plt.plot(index, exp_num)
-    # plt.legend(['Real num', 'Exp num'])
+
+    ax1 = plt.subplot(511)
+    ax1.plot(threads[1:], error_dict['forecast_error'])
+    ax1.set_title("Forecast Error")
+
+    ax2 = plt.subplot(512)
+    ax2.plot(threads[1:], error_dict['mean_forecast_error'])
+    ax2.set_title("Mean Forecast Error")
+
+    ax3 = plt.subplot(513)
+    ax3.plot(threads[1:], error_dict['mae'])
+    ax3.set_title("Mean Absolute Error")
+
+    ax4 = plt.subplot(514)
+    ax4.plot(threads[1:], error_dict['mse'])
+    ax4.set_title("Mean Squared Error")
+
+    ax5 = plt.subplot(515)
+    ax5.plot(threads[1:], error_dict['rmse'])
+    ax5.set_title("Root Mean Squared Error")
+
     plt.show()
 
-    # plt.plot(index, real_num)
-    # plt.plot(index, exp_num)
-    # plt.legend(['Real num', 'Exp num'])
+
+    # plt.plot(threads[1:], error_dict['mae'])
+    # plt.title("Mean Absolute Error")
+    # plt.xlabel('Threads number')
+    # plt.ylabel('MAE (requests number)')
+    # # plt.plot(index, exp_num)
+    # # plt.legend(['Real num', 'Exp num'])
     # plt.show()
+
+
+
+def time_to_req_num(dataframe):
+
+    real_time = dataframe['real_time']
+    real_num_of_req = dataframe['real_req_num']
+
+    ratio = real_num_of_req/real_time
+
+    max_idx = ratio.idxmax()
+    print(dataframe.iloc[max_idx, :])
+
+    dataframe = dataframe.sort_values(by=['threads'])
+    dataframe.reset_index(drop=True, inplace=True)
+
+    # plt.plot(dataframe.index, ratio)
+    plt.scatter(dataframe['threads'], ratio)
+    plt.title("Ratio of the number of requests to time ")
+    plt.xlabel('Index')
+    plt.ylabel('real_num_of_req/real_time')
+    plt.show()
 
 
 def main():
 
-    print('test conclusions')
-
     # open test dataset
-
     df = pd.read_csv('test_dataset.csv')
-    # print(df)
 
     df['exp_req_num'] = df['threads'] * df['iter_1'] * df['iter_2']
-    # print(df)
 
-    print(df.columns)
     realVals = df['real_time']
 
     rf_forecast_error = realVals.sum() - df['rf_time'].sum()
@@ -114,9 +159,10 @@ def main():
     print("MSE: RF: {}, SVR: {}, DTR: {}, LR: {}".format(rf_mse, svr_mse, dtr_mse, lr_mse))
     print("RMSE: RF: {}, SVR: {}, DTR: {}, LR: {}".format(rf_rmse, svr_rmse, dtr_rmse, lr_rmse))
 
-    # show_plot(df.index, realVals, df['rf_time'], df['svr_time'], df['dtr_time'], df['lr_time'])
+    show_plot(df.index, realVals, df['rf_time'], df['svr_time'], df['dtr_time'], df['lr_time'])
+    req_num_check(df)
+    time_to_req_num(df)
 
-    req_num_check(df, df.index, df['real_req_num'], df['exp_req_num'], df['threads'])
 
 if __name__ == '__main__':
     main()
